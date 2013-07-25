@@ -1,0 +1,5 @@
+/node_modules
+/couchcreds.json
+/AWScredentials.json
+/npm-debug.log
+/curl.exe
