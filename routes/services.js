@@ -31,12 +31,6 @@ exports.add = function(req, res) {
         realname = req.body.realname,
         date = new Date();
 
-    if(stage == "Plan Pending") {
-        var confirmed = "false";
-    } else {
-        var confirmed = "true";
-    }
-
     // Make sure the user is logged in and has privileges
     if (!auth) { // User level must be "admin" to add institution
         res.send(401); 
@@ -66,7 +60,7 @@ exports.add = function(req, res) {
             stage: stage,
             description: description,
             contact: primary_contact,
-            confirmed: confirmed,
+            confirmed: "false",
             user_id: user_id,
             realname: realname,
             date: date
@@ -79,56 +73,24 @@ exports.add = function(req, res) {
                 return;
             }
 
-            // DON'T NEED TO SEND EMAILS FOR NOW
-            // var ses = new AWS.SES({region: "us-east-1"});
-
-            // var message = "Hello " + primary_contact.realname + ",";
-            //     message += "\n" + realname + " has assigned a new location service to you! Please check your account on GeoReliefs for more details.";
-
-            // // Send email to the person it was assigned to
-            // ses.sendEmail({
-            //     Source: "willem.ellis@gmail.com", // Need to change this ASAP
-            //     Destination: {
-            //         ToAddresses: [primary_contact.email],
-            //     },
-            //     Message: {
-            //         Subject: {
-            //             Data: "A new Location Service has been assigned to you"
-            //         },
-            //         Body: {
-            //             Text: {
-            //                 Data: message,
-            //                 Charset: "UTF-8"
-            //             }
-            //         }
-            //     },
-            // }, function(err, data) {
-            //     if(err) {
-            //         res.send(500);
-            //         return;
-            //     }
-            // });
-
             // Increment the service count
-            if(confirmed === "true") {
-                locations_db.get(loc_id, function(err, body) {
+            locations_db.get(loc_id, function(err, body) {
+                if(err) {
+                    res.send(err.reason, err.status_code);
+                    return;
+                }
+
+                // Increment the service count
+                body.geoJSON.properties.serviceCount += 1;
+
+                // Save it back
+                locations_db.insert(body, function(err, body) {
                     if(err) {
                         res.send(err.reason, err.status_code);
                         return;
                     }
-
-                    // Increment the service count
-                    body.geoJSON.properties.serviceCount += 1;
-
-                    // Save it back
-                    locations_db.insert(body, function(err, body) {
-                        if(err) {
-                            res.send(err.reason, err.status_code);
-                            return;
-                        }
-                    });
                 });
-            }
+            });
             // Everything worked! Send the final response
             res.send(body, 200);
         });
@@ -159,27 +121,8 @@ exports.update = function(req, res) {
         // Ridiculous if block to get only what was sent
         if(request.stage) {
             body.stage = request.stage;
-            if(body.stage == "Plan Pending") {
+            if(body.stage == "Planned") {
                 body.confirmed = "false";
-
-                // Get the location and decrement the service count
-                locations_db.get(body.loc_id, function(err, body) {
-                    if(err) {
-                        res.send(err.reason, err.status_code);
-                        return;
-                    }
-
-                    // Decrement the service count
-                    body.geoJSON.properties.serviceCount -= 1;
-
-                    // Save it back
-                    locations_db.insert(body, function(err, body) {
-                        if(err) {
-                            res.send(err.reason, err.status_code);
-                            return;
-                        }
-                    });
-                });
             }
         }
 
@@ -198,25 +141,6 @@ exports.update = function(req, res) {
         if(request.confirmed) {
             // Update the status to confirmed
             body.confirmed = request.confirmed;
-
-            // Get the location and increment the service count
-            locations_db.get(body.loc_id, function(err, body) {
-                if(err) {
-                    res.send(err.reason, err.status_code);
-                    return;
-                }
-
-                // Increment the service count
-                body.geoJSON.properties.serviceCount += 1;
-
-                // Save it back
-                locations_db.insert(body, function(err, body) {
-                    if(err) {
-                        res.send(err.reason, err.status_code);
-                        return;
-                    }
-                });
-            });
         }
 
         // Update the service entry
@@ -244,20 +168,25 @@ exports.getByLocation = function(req, res) {
     }
 
     // Get the view and return that ish
-    services_db.view('GetServices', 'GetByLocationOnly', {startkey: [loc_id,{}], endkey:[loc_id], descending: true}, function(err, body) {
-        if(err) {
-            res.send(err.status_code + " " + err.reason, err.status_code);
-        } else {
+    services_db.view('GetServices', 'GetByLocationOnly', 
+                    {startkey: [loc_id,{}], endkey:[loc_id], descending: true}, 
+        function(err, body) {
+            if(err) {
+                res.send(err.status_code + " " + err.reason, err.status_code);
+            } else {
 
-            var items = new Array();
+                var items = new Array();
 
-            // Create the response array
-            body.rows.forEach(function(row) {
-                items.push(row.value)
-            });
+                // Create the response array
+                body.rows.forEach(function(row) {
+                    if(row.value.confirmed == "false" && row.value.stage == "Planned") {
+                        row.value.stage = "Plan Pending";
+                    }
+                    items.push(row.value)
+                });
 
-            res.send(items, 200);
-        }
+                res.send(items, 200);
+            }
     });
 };
 
