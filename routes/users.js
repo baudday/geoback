@@ -55,6 +55,8 @@ exports.register = function(req, res) {
     // Get the institution
     institutions_db.get(institution, function(err, body) {
         if(err) {
+            console.log("ERROR GETTING INSTITUTION");
+            console.log(err);
             res.send(err.reason, err.status_code);
             return;
         }
@@ -73,6 +75,8 @@ exports.register = function(req, res) {
 
         users_db.insert(user, function(err, body) {
             if(err) {
+                console.log("ERROR INSERTING USER");
+                console.log(err);
                 res.send(err.status_code + " " + err.reason, err.status_code);
                 return;
             }
@@ -102,6 +106,8 @@ exports.register = function(req, res) {
                 },
             }, function(err, data) {
                 if(err) {
+                    console.log("ERROR SENDING EMAIL");
+                    console.log(err);
                     res.send(500);
                     return;
                 }
