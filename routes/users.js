@@ -64,16 +64,19 @@ exports.register = function(req, res) {
         var emailDomain = email.split('@'),
             urlDomain = body.url.split('.'),
             l = urlDomain.length;
+
         // Check if user's email domain matches institution domain or is on the list
-        if(
-        emailDomain[1] + "/" != urlDomain[l-2] + "." + urlDomain[l-1] &&
-        body.approvedEmails.indexOf(email) === -1
-        ) {
+        if(emailDomain[1] + "/" != urlDomain[l-2] + "." + urlDomain[l-1] &&
+           body.approvedEmails.indexOf(email) === -1) {
             res.send("Not approved to register under " + body.name, 404);
             return;
         }
 
-        users_db.insert(user, function(err, body) {
+        nano.request({
+            db: '_users',
+            method: 'POST',
+            body: user
+        }, function(err, body) {
             if(err) {
                 console.log("ERROR INSERTING USER");
                 console.log(err);
@@ -114,7 +117,6 @@ exports.register = function(req, res) {
             });
 
             res.send(body, 200);
-            return;
         });
     });
 };
