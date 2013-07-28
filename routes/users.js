@@ -1,10 +1,16 @@
 var nano = require('nano')('http://127.0.0.1:5984'),
     institutions_db = nano.use('institutions'),
-    public_users = nano.use('public_users'),
     users_db = nano.use('_users'),
     AWS = require('aws-sdk'),
     crypto = require('crypto'),
     fs = require('fs');
+
+var adminCreds = require('../couchcreds.json'),
+    adminNano = require('nano')('http://127.0.0.1:5984'),
+    adminUsers_db = adminNano.use('_users');
+
+// Configure admin nano
+adminNano.config.url = 'http://' + adminCreds.user + ':' + adminCreds.pass + '@127.0.0.1:5984';
 
 // Configure AWS
 AWS.config.loadFromPath('./AWScredentials.json');
@@ -290,15 +296,14 @@ exports.changePassword = function(req, res) {
 exports.getByInstitution = function(req, res) {
     // Don't have to be logged in for this since we're using
     // it for an open page.
-    var nano = require('nano')('http://127.0.0.1:5984'),
-        public_users = nano.use('public_users');
+    // (Gonna need to use admin privileges here)
 
     var institution = req.params.institution;
 
-    public_users.view('GetByInstitution', 'GetByInstitution', {keys: [institution]}, 
+    adminUsers_db.view('GetUsers', 'GetByInstitution', {keys: [institution]}, 
         function(err, body) {
             if(err) {
-                res.send(err.status_code + " " + err.reason, err.status_code);
+                res.send(err.reason, err.status_code);
             }
             var items = new Array();
 
@@ -348,7 +353,7 @@ exports.approveUser = function(req, res) {
         var institution = body;
 
         // Get the institution users
-        public_users.view('GetByInstitution', 'GetByInstitution', {keys: [userInfo.institution]}, 
+        adminUsers_db.view('GetUsers', 'GetByInstitution', {keys: [userInfo.institution]}, 
             function(err, body) {
                 if(err) {
                     res.send(err.status_code + " " + err.reason, err.status_code);
@@ -398,11 +403,6 @@ exports.approveUser = function(req, res) {
 // Allows the user to confirm their email address
 exports.confirm = function(req, res) {
     // (Gonna need to use admin privileges here)
-    var adminCreds = require('./couchcreds.json');
-    var adminNano = require('nano')('http://127.0.0.1:5984'),
-        adminUsers_db = adminNano.use('_users');
-    adminNano.config.url = 'http://' + adminCreds.user + ':' + adminCreds.pass + '@127.0.0.1:5984';
-
     var string = req.params.string.split(':'),
         key = string[0],
         username = string[1];

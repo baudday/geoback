@@ -2,9 +2,15 @@ var nano = require('nano')('http://127.0.0.1:5984'),
     services_db = nano.use('services'),
     users_db = nano.use('_users'),
     session_db = nano.use('_session'),
-    public_users = nano.use('public_users'),
     locations_db = nano.use('locations'),
     AWS = require('aws-sdk');
+
+var adminCreds = require('../couchcreds.json'),
+    adminNano = require('nano')('http://127.0.0.1:5984'),
+    adminUsers_db = adminNano.use('_users');
+
+// Configure admin nano
+adminNano.config.url = 'http://' + adminCreds.user + ':' + adminCreds.pass + '@127.0.0.1:5984';
 
 // Configure AWS
 AWS.config.loadFromPath('./AWScredentials.json');
@@ -38,8 +44,9 @@ exports.add = function(req, res) {
     }
 
     // Get the primary contact's info
-    public_users.get(contact, function(err, body, headers) {
+    adminUsers_db.get(contact, function(err, body, headers) {
         if(err) {
+            console.log(contact);
             res.send(err.reason, err.status_code);
             return;
         }
