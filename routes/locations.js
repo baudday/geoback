@@ -38,29 +38,13 @@ exports.add = function(req, res) {
             "geometry": {
                 "type": "Point",
                 "coordinates": [lon, lat]
-            }
+            },
+            "added": new Date()
         }
     };
 
     // Image is not a required field
     if(image) {
-        // // Let's build the image
-        // var regex = /^data:.+\/(.+);base64,(.*)$/;
-        // var matches = image.match(regex),
-        //     ext = matches[1],
-        //     data = matches[2],
-        //     buffer = new Buffer(data, 'base64'),
-        //     filename = crypto.randomBytes(4).readUInt32LE(0) + "." + ext, // Generate random filename
-        //     imgFolder = "../backboneauth/images/";
-
-        // // Save the file
-        // fs.writeFile(imgFolder + filename, buffer, function(err) {
-        //     if(err) {
-        //         res.send("Problem uploading image.", 500);
-        //         return;
-        //     }
-        // });
-
         // We're gonna store the blob to make offline stuff easier later
         location.geoJSON.properties.image = [image];
     }
