@@ -156,14 +156,14 @@ var formData = {
 
 ## Institutions
 #### Institution Properties
-| Name           | Type          | Description                                                |
-| -------------- | ------------- | ---------------------------------------------------------- |
-| _id            | String        | Institution's unique identifier                            |
-| _rev           | String        | Document revision                                          |
-| name           | String        | Name of the institution                                    |
-| url            | String        | URL of the institution                                     |
-| description    | String        | Description of the institution                             |
-| approvedEmails | Array[String] | Array of emails approved to register under the institution |
+| Name           | Type                 | Description                                                |
+| -------------- | -------------------- | ---------------------------------------------------------- |
+| _id            | String               | Institution's unique identifier                            |
+| _rev           | String               | Document revision                                          |
+| name           | String               | Name of the institution                                    |
+| url            | String               | URL of the institution                                     |
+| description    | String               | Description of the institution                             |
+| approvedEmails | Array &lt;String&gt; | Array of emails approved to register under the institution |
 
 ### `POST` /institutions
 Add an institution to the table.
