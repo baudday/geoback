@@ -1,0 +1,594 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>GeoRelief by baudday</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>GeoRelief</h1>
+        <p>GeoRelief API Documentation</p>
+        <p class="view"><a href="https://github.com/baudday/geoback">View the Project on GitHub <small>baudday/geoback</small></a></p>
+        <ul>
+          <li><a href="https://github.com/baudday/geoback/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/baudday/geoback/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/baudday/geoback">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="georelief-api-endpoint-reference" class="anchor" href="#georelief-api-endpoint-reference"><span class="octicon octicon-link"></span></a>GeoRelief API Endpoint Reference</h1>
+
+<p>These are the endpoints for the GeoRelief API</p>
+
+<h2>
+<a name="contents" class="anchor" href="#contents"><span class="octicon octicon-link"></span></a>Contents</h2>
+
+<ol>
+<li>
+<a href="#areas">Areas</a>
+
+<ul>
+<li><a href="#post-areas"><code>POST</code> /areas</a></li>
+<li><a href="#get-areas"><code>GET</code> /areas</a></li>
+<li><a href="#get-areasarea"><code>GET</code> /areas/:area</a></li>
+<li><a href="#delete-areas"><code>DELETE</code> /areas</a></li>
+</ul>
+</li>
+<li>
+<a href="#contact">Contact</a>
+
+<ul>
+<li><a href="#post-contact"><code>POST</code> /contact</a></li>
+</ul>
+</li>
+<li>
+<a href="#institutions">Institutions</a>
+
+<ul>
+<li><a href="#post-institutions"><code>POST</code> /institutions</a></li>
+<li><a href="#get-institutions"><code>GET</code> /institutions</a></li>
+<li><a href="#get-institutionsid"><code>GET</code> /institutions/:id</a></li>
+</ul>
+</li>
+<li>
+<a href="#locations">Locations</a>
+
+<ul>
+<li><a href="#post-locations"><code>POST</code> /locations</a></li>
+<li><a href="#get-locations"><code>GET</code> /locations</a></li>
+<li><a href="#get-locationstypetype"><code>GET</code> /locations/type/:type</a></li>
+</ul>
+</li>
+<li>
+<a href="#logs">Logs</a>
+
+<ul>
+<li><a href="#post-log"><code>POST</code> /log</a></li>
+<li><a href="#get-logloc_id"><code>GET</code> /log/:loc_id</a></li>
+<li><a href="#get-logclusterloc_idcluster"><code>GET</code> /log/cluster/:loc_id/:cluster</a></li>
+</ul>
+</li>
+<li>
+<a href="#services">Services</a>
+
+<ul>
+<li><a href="#post-services"><code>POST</code> /services</a></li>
+<li><a href="#put-servicesid"><code>PUT</code> /services/:id</a></li>
+<li><a href="#get-servicesloc_id"><code>GET</code> /services/:loc_id</a></li>
+<li><a href="#get-servicesclusterloc_idcluster"><code>GET</code> /services/cluster/:loc_id/:cluster</a></li>
+<li><a href="#get-servicesservice_id"><code>GET</code> /services/:service_id</a></li>
+<li><a href="#get-servicescluster"><code>GET</code> /services/cluster/:cluster</a></li>
+</ul>
+</li>
+<li>
+<a href="#users">Users</a>
+
+<ul>
+<li><a href="#post-login"><code>POST</code> /login</a></li>
+<li><a href="#post-users"><code>POST</code> /users</a></li>
+<li><a href="#post-password"><code>POST</code> /password</a></li>
+<li><a href="#post-usersapprove"><code>POST</code> /users/approve</a></li>
+<li><a href="#get-logout"><code>GET</code> /logout</a></li>
+<li><a href="#get-usersid"><code>GET</code> /users/:id</a></li>
+<li><a href="#get-usersinstitutioninstitution"><code>GET</code> /users/institution/:institution</a></li>
+<li><a href="#get-usersconfirmkey"><code>GET</code> /users/confirm/:key</a></li>
+</ul>
+</li>
+</ol><h2>
+<a name="areas" class="anchor" href="#areas"><span class="octicon octicon-link"></span></a>Areas</h2>
+
+<h4>
+<a name="area-properties" class="anchor" href="#area-properties"><span class="octicon octicon-link"></span></a>Area Properties</h4>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>_id</td>
+<td>String</td>
+<td>Name and unique identifier of the area</td>
+</tr>
+<tr>
+<td>_rev</td>
+<td>String</td>
+<td>Revision number of the relief area</td>
+</tr>
+<tr>
+<td>date</td>
+<td>Date</td>
+<td>Date and time relief area was added</td>
+</tr>
+<tr>
+<td>coordinates</td>
+<td>String</td>
+<td>JSON encoded string containing the Latitude, Longitude, and Zoom level of relief area</td>
+</tr>
+</tbody>
+</table><h3>
+<a name="post-areas" class="anchor" href="#post-areas"><span class="octicon octicon-link"></span></a><code>POST</code> /areas</h3>
+
+<p>Add an area to the table.</p>
+
+<h4>
+<a name="parameters" class="anchor" href="#parameters"><span class="octicon octicon-link"></span></a>Parameters</h4>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Name of the area</td>
+</tr>
+<tr>
+<td>coordinates</td>
+<td>String</td>
+<td>JSON encoded string containing the Latitude, Longitude, and Zoom level of the map</td>
+</tr>
+</tbody>
+</table><h4>
+<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">area</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">"New Area"</span><span class="p">;</span>
+    <span class="nx">coordinates</span><span class="o">:</span> <span class="s2">"{\"lat\": 40.6451056, \"lon\": -73.9962453, \"zoom\": 13}"</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="get-areas" class="anchor" href="#get-areas"><span class="octicon octicon-link"></span></a><code>GET</code> /areas</h3>
+
+<p>Get all areas.</p>
+
+<h4>
+<a name="returns" class="anchor" href="#returns"><span class="octicon octicon-link"></span></a>Returns</h4>
+
+<p>An array of all relief areas.</p>
+
+<h4>
+<a name="example-1" class="anchor" href="#example-1"><span class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight"><pre><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">"_id"</span><span class="p">:</span> <span class="s2">"Minneapolis"</span><span class="p">,</span>
+        <span class="nt">"_rev"</span><span class="p">:</span> <span class="s2">"1-5cb090e13e57b1813811770ab8434a66"</span><span class="p">,</span>
+        <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-06-30T20:51:09.487Z"</span><span class="p">,</span>
+        <span class="nt">"coordinates"</span><span class="p">:</span> <span class="s2">"{\"lat\":44.97466550157047, \"lon\":-93.26611518859863, \"zoom\":14}"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">"_id"</span><span class="p">:</span> <span class="s2">"New York"</span><span class="p">,</span>
+        <span class="nt">"_rev"</span><span class="p">:</span> <span class="s2">"2-e3b12e17b5f6f470eca6ecb523ce0dd3"</span><span class="p">,</span>
+        <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-06-08T23:42:51.734Z"</span><span class="p">,</span>
+        <span class="nt">"coordinates"</span><span class="p">:</span> <span class="s2">"{\"lat\": 40.6451056, \"lon\": -73.9962453, \"zoom\": 13}"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">"_id"</span><span class="p">:</span> <span class="s2">"Syria"</span><span class="p">,</span>
+        <span class="nt">"_rev"</span><span class="p">:</span> <span class="s2">"21-62585e15c9b1fd71160a592cfa188c06"</span><span class="p">,</span>
+        <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-06-08T22:42:51.214Z"</span><span class="p">,</span>
+        <span class="nt">"coordinates"</span><span class="p">:</span> <span class="s2">"{\"lat\": 34.72919834205246, \"lon\": 36.71493530273437, \"zoom\": 13}"</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+
+<h3>
+<a name="get-areasarea" class="anchor" href="#get-areasarea"><span class="octicon octicon-link"></span></a><code>GET</code> /areas/:area</h3>
+
+<p>Get a single area.</p>
+
+<h4>
+<a name="returns-1" class="anchor" href="#returns-1"><span class="octicon octicon-link"></span></a>Returns</h4>
+
+<p>The specified area</p>
+
+<h4>
+<a name="parameters-1" class="anchor" href="#parameters-1"><span class="octicon octicon-link"></span></a>Parameters</h4>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody><tr>
+<td>area</td>
+<td>String</td>
+<td>Name of the area</td>
+</tr></tbody>
+</table><h4>
+<a name="example-2" class="anchor" href="#example-2"><span class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">"_id"</span><span class="p">:</span> <span class="s2">"Syria"</span><span class="p">,</span>
+    <span class="nt">"_rev"</span><span class="p">:</span> <span class="s2">"21-62585e15c9b1fd71160a592cfa188c06"</span><span class="p">,</span>
+    <span class="nt">"date"</span><span class="p">:</span> <span class="s2">"2013-06-08T22:42:51.214Z"</span><span class="p">,</span>
+    <span class="nt">"coordinates"</span><span class="p">:</span> <span class="s2">"{\"lat\": 34.72919834205246, \"lon\": 36.71493530273437, \"zoom\": 13}"</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="delete-areas" class="anchor" href="#delete-areas"><span class="octicon octicon-link"></span></a><code>DELETE</code> /areas</h3>
+
+<p>Delete an area.</p>
+
+<h4>
+<a name="parameters-2" class="anchor" href="#parameters-2"><span class="octicon octicon-link"></span></a>Parameters</h4>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Name of the area</td>
+</tr>
+<tr>
+<td>rev</td>
+<td>String</td>
+<td>Revision of the document</td>
+</tr>
+</tbody>
+</table><h4>
+<a name="example-3" class="anchor" href="#example-3"><span class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">area</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">"Delete This Area"</span><span class="p">;</span>
+    <span class="nx">rev</span><span class="o">:</span> <span class="s2">"1-5cb090e13e57b1813811770ab8434a66"</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h2>
+
+<h3>
+<a name="post-contact" class="anchor" href="#post-contact"><span class="octicon octicon-link"></span></a><code>POST</code> /contact</h3>
+
+<p>Send message to GeoRelief administrator</p>
+
+<h4>
+<a name="parameters-3" class="anchor" href="#parameters-3"><span class="octicon octicon-link"></span></a>Parameters</h4>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Name of the sender</td>
+</tr>
+<tr>
+<td>email</td>
+<td>String</td>
+<td>Email of the sender</td>
+</tr>
+<tr>
+<td>regarding</td>
+<td>String</td>
+<td>What the message is about</td>
+</tr>
+<tr>
+<td>message</td>
+<td>String</td>
+<td>Body of the message</td>
+</tr>
+</tbody>
+</table><h4>
+<a name="example-4" class="anchor" href="#example-4"><span class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">formData</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">"Real Name"</span><span class="p">,</span>
+    <span class="nx">email</span><span class="o">:</span> <span class="s2">"example@email.com"</span><span class="p">,</span>
+    <span class="nx">regarding</span><span class="o">:</span> <span class="s2">"Bug Report"</span><span class="p">,</span>
+    <span class="nx">message</span><span class="o">:</span> <span class="s2">"The contact form doesn't work!"</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="institutions" class="anchor" href="#institutions"><span class="octicon octicon-link"></span></a>Institutions</h2>
+
+<h4>
+<a name="institution-properties" class="anchor" href="#institution-properties"><span class="octicon octicon-link"></span></a>Institution Properties</h4>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>_id</td>
+<td>String</td>
+<td>Institution's unique identifier</td>
+</tr>
+<tr>
+<td>_rev</td>
+<td>String</td>
+<td>Document revision</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Name of the institution</td>
+</tr>
+<tr>
+<td>url</td>
+<td>String</td>
+<td>URL of the institution</td>
+</tr>
+<tr>
+<td>description</td>
+<td>String</td>
+<td>Description of the institution</td>
+</tr>
+<tr>
+<td>approvedEmails</td>
+<td>Array &lt;String&gt;</td>
+<td>Array of emails approved to register under the institution</td>
+</tr>
+</tbody>
+</table><h3>
+<a name="post-institutions" class="anchor" href="#post-institutions"><span class="octicon octicon-link"></span></a><code>POST</code> /institutions</h3>
+
+<p>Add an institution to the table.</p>
+
+<h4>
+<a name="parameters-4" class="anchor" href="#parameters-4"><span class="octicon octicon-link"></span></a>Parameters</h4>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Name of the institution</td>
+</tr>
+<tr>
+<td>url</td>
+<td>String</td>
+<td>URL of the institution</td>
+</tr>
+<tr>
+<td>description</td>
+<td>String</td>
+<td>Description of the institution</td>
+</tr>
+</tbody>
+</table><h4>
+<a name="example-5" class="anchor" href="#example-5"><span class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">institution</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">"Institution Name"</span><span class="p">,</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="s2">"http://example.com/"</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s2">"Short description of my brand new institution!"</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="get-institutions" class="anchor" href="#get-institutions"><span class="octicon octicon-link"></span></a><code>GET</code> /institutions</h3>
+
+<p>Get all institutions.</p>
+
+<h4>
+<a name="returns-2" class="anchor" href="#returns-2"><span class="octicon octicon-link"></span></a>Returns</h4>
+
+<p>An array of all institutions.</p>
+
+<h4>
+<a name="example-6" class="anchor" href="#example-6"><span class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight"><pre><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">"_id"</span><span class="p">:</span> <span class="s2">"4b61f34780a83a95e503ad835b00109f"</span><span class="p">,</span>
+        <span class="nt">"_rev"</span><span class="p">:</span> <span class="s2">"112-37ef7d5e60f7cd84321ee3fb3a9401d4"</span><span class="p">,</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"Action Against Hunger (AAH)"</span><span class="p">,</span>
+        <span class="nt">"url"</span><span class="p">:</span> <span class="s2">"http://www.aah-usa.org/"</span><span class="p">,</span>
+        <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"Develops and runs emergency programs in nutrition, health, water and food security for countries in need. Also provides disaster preparedness programs with the goal of anticipating and preventing humanitarian crises."</span><span class="p">,</span>
+        <span class="nt">"approvedEmails"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">"example@email.com"</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">"_id"</span><span class="p">:</span> <span class="s2">"4b61f34780a83a95e503ad835b001d69"</span><span class="p">,</span>
+        <span class="nt">"_rev"</span><span class="p">:</span> <span class="s2">"2-0854e647df3f096b67e62bfc7f6892c2"</span><span class="p">,</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"CARE"</span><span class="p">,</span>
+        <span class="nt">"url"</span><span class="p">:</span> <span class="s2">"http://www.careusa.org/"</span><span class="p">,</span>
+        <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"CARE is one of the world's largest private international humanitarian organizations, committed to helping families in poor communities improve their lives and achieve lasting victories over poverty. Founded in 1945 to provide relief to survivors of World War II, CARE quickly became a trusted vehicle for the compassion and generosity of millions."</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+
+<h3>
+<a name="get-institutionsid" class="anchor" href="#get-institutionsid"><span class="octicon octicon-link"></span></a><code>GET</code> /institutions/:id</h3>
+
+<p>Get a single institution</p>
+
+<h4>
+<a name="parameters-5" class="anchor" href="#parameters-5"><span class="octicon octicon-link"></span></a>Parameters</h4>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody><tr>
+<td>id</td>
+<td>String</td>
+<td>Institution's unique identifier</td>
+</tr></tbody>
+</table><h4>
+<a name="example-7" class="anchor" href="#example-7"><span class="octicon octicon-link"></span></a>Example</h4>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">"_id"</span><span class="p">:</span> <span class="s2">"4b61f34780a83a95e503ad835b00109f"</span><span class="p">,</span>
+    <span class="nt">"_rev"</span><span class="p">:</span> <span class="s2">"112-37ef7d5e60f7cd84321ee3fb3a9401d4"</span><span class="p">,</span>
+    <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"Action Against Hunger (AAH)"</span><span class="p">,</span>
+    <span class="nt">"url"</span><span class="p">:</span> <span class="s2">"http://www.aah-usa.org/"</span><span class="p">,</span>
+    <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"Develops and runs emergency programs in nutrition, health, water and food security for countries in need. Also provides disaster preparedness programs with the goal of anticipating and preventing humanitarian crises."</span><span class="p">,</span>
+    <span class="nt">"approvedEmails"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">"example@email.com"</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="locations" class="anchor" href="#locations"><span class="octicon octicon-link"></span></a>Locations</h2>
+
+<h3>
+<a name="post-locations" class="anchor" href="#post-locations"><span class="octicon octicon-link"></span></a><code>POST</code> /locations</h3>
+
+<h3>
+<a name="get-locations" class="anchor" href="#get-locations"><span class="octicon octicon-link"></span></a><code>GET</code> /locations</h3>
+
+<h3>
+<a name="get-locationstypetype" class="anchor" href="#get-locationstypetype"><span class="octicon octicon-link"></span></a><code>GET</code> locations/type/:type</h3>
+
+<h2>
+<a name="logs" class="anchor" href="#logs"><span class="octicon octicon-link"></span></a>Logs</h2>
+
+<h3>
+<a name="post-log" class="anchor" href="#post-log"><span class="octicon octicon-link"></span></a><code>POST</code> /log</h3>
+
+<h3>
+<a name="get-logloc_id" class="anchor" href="#get-logloc_id"><span class="octicon octicon-link"></span></a><code>GET</code> /log/:loc_id</h3>
+
+<h3>
+<a name="get-logclusterloc_idcluster" class="anchor" href="#get-logclusterloc_idcluster"><span class="octicon octicon-link"></span></a><code>GET</code> /log/cluster/:loc_id/:cluster</h3>
+
+<h2>
+<a name="services" class="anchor" href="#services"><span class="octicon octicon-link"></span></a>Services</h2>
+
+<h3>
+<a name="post-services" class="anchor" href="#post-services"><span class="octicon octicon-link"></span></a><code>POST</code> /services</h3>
+
+<h3>
+<a name="put-servicesid" class="anchor" href="#put-servicesid"><span class="octicon octicon-link"></span></a><code>PUT</code> /services/:id</h3>
+
+<h3>
+<a name="get-servicesloc_id" class="anchor" href="#get-servicesloc_id"><span class="octicon octicon-link"></span></a><code>GET</code> /services/:loc_id</h3>
+
+<h3>
+<a name="get-servicesclusterloc_idcluster" class="anchor" href="#get-servicesclusterloc_idcluster"><span class="octicon octicon-link"></span></a><code>GET</code> /services/cluster/:loc_id/:cluster</h3>
+
+<h3>
+<a name="get-servicesservice_id" class="anchor" href="#get-servicesservice_id"><span class="octicon octicon-link"></span></a><code>GET</code> /services/:service_id</h3>
+
+<h3>
+<a name="get-servicesclustercluster" class="anchor" href="#get-servicesclustercluster"><span class="octicon octicon-link"></span></a><code>GET</code> /services/cluster/:cluster</h3>
+
+<h2>
+<a name="users" class="anchor" href="#users"><span class="octicon octicon-link"></span></a>Users</h2>
+
+<h3>
+<a name="post-login" class="anchor" href="#post-login"><span class="octicon octicon-link"></span></a><code>POST</code> /login</h3>
+
+<p>Log the user in.</p>
+
+<h4>
+<a name="parameters-6" class="anchor" href="#parameters-6"><span class="octicon octicon-link"></span></a>Parameters</h4>
+
+<ul>
+<li><code>username</code></li>
+<li><code>password</code></li>
+</ul><h4>
+<a name="returns-3" class="anchor" href="#returns-3"><span class="octicon octicon-link"></span></a>Returns</h4>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">"_id"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"User ID"</span><span class="p">,</span>
+    <span class="s2">"_rev"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"Revision"</span><span class="p">,</span>
+    <span class="s2">"name"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"Username"</span><span class="p">,</span>
+    <span class="s2">"realname"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"Real Name"</span><span class="p">,</span>
+    <span class="s2">"institution"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"Institution ID"</span><span class="p">,</span>
+    <span class="s2">"email"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"User Email"</span><span class="p">,</span>
+    <span class="s2">"type"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"User Type"</span><span class="p">,</span>
+    <span class="s2">"roles"</span><span class="o">:</span> <span class="nb">Array</span> <span class="s2">"User Roles"</span><span class="p">,</span>
+    <span class="s2">"level"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"User Level"</span><span class="p">,</span>
+    <span class="s2">"phone"</span><span class="o">:</span> <span class="nx">Int</span> <span class="s2">"User Phone Number"</span><span class="p">,</span>
+    <span class="s2">"cluster"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"User Cluster"</span><span class="p">,</span>
+    <span class="s2">"institutionName"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"Institution Name"</span><span class="p">,</span>
+    <span class="s2">"institutionUrl"</span><span class="o">:</span> <span class="nb">String</span> <span class="s2">"Institution URL"</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="post-users" class="anchor" href="#post-users"><span class="octicon octicon-link"></span></a><code>POST</code> /users</h3>
+
+<h3>
+<a name="post-password" class="anchor" href="#post-password"><span class="octicon octicon-link"></span></a><code>POST</code> /password</h3>
+
+<h3>
+<a name="post-usersapprove" class="anchor" href="#post-usersapprove"><span class="octicon octicon-link"></span></a><code>POST</code> /users/approve</h3>
+
+<h3>
+<a name="get-logout" class="anchor" href="#get-logout"><span class="octicon octicon-link"></span></a><code>GET</code> /logout</h3>
+
+<h3>
+<a name="get-usersid" class="anchor" href="#get-usersid"><span class="octicon octicon-link"></span></a><code>GET</code> /users/:id</h3>
+
+<h3>
+<a name="get-usersinstitutioninstitution" class="anchor" href="#get-usersinstitutioninstitution"><span class="octicon octicon-link"></span></a><code>GET</code> /users/institution/:institution</h3>
+
+<h3>
+<a name="get-usersconfirmkey" class="anchor" href="#get-usersconfirmkey"><span class="octicon octicon-link"></span></a><code>GET</code> /users/confirm/:key</h3>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/baudday">baudday</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
