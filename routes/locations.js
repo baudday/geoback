@@ -87,8 +87,8 @@ exports.getAll = function(req, res) {
     });
 };
 
-// Get the locations, filtering by type
-exports.getByType = function(req, res) {
+// Get filtered locations
+exports.getFiltered = function(req, res) {
     var auth = req.cookies['AuthSession'];
     nano.config.cookie = auth;
 
@@ -97,9 +97,18 @@ exports.getByType = function(req, res) {
         return;
     }
 
-    var type = req.params.type;
+    if(!req.params.type && !req.params.area) {
+        res.send(400); // Bad request
+        return;
+    }
 
-    locations.view('GetByType', 'GetByType', {keys: [type]}, function(err, body) {
+    var type = req.params.type,
+        area = req.params.area;
+
+    var param = type ? type : area,
+        view = type ? 'GetByType' : 'GetByArea';
+
+    locations.view(view, view, {keys: [param]}, function(err, body) {
         if(err) {
             res.send(err.status_code + " " + err.reason, err.status_code);
         } else {

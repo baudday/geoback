@@ -60,7 +60,8 @@ app.post('/api/institutions', institutions.addInstitution);
 // Locations methods
 app.post('/api/locations', locations.add); // Add a location
 app.get('/api/locations', locations.getAll); // Get all the locations
-app.get('/api/locations/type/:type', locations.getByType) // Get all the locations by type
+app.get('/api/locations/type/:type', locations.getFiltered) // Get all the locations by type
+app.get('/api/locations/area/:area', locations.getFiltered) // Get all locations by area
 
 // Log methods
 app.post('/api/log', log.add); // Add log entry
