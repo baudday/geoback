@@ -85,6 +85,10 @@ app.delete('/api/areas', areas.delete) // Delete an area
 // Contact methods
 app.post('/api/contact', contact.send);
 
+app.get('/api/status', function(req, res) {
+    res.send(true, 200);
+})
+
 // Just for testing
 app.get('/api/foo', users.foo); // Test!
 
