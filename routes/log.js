@@ -11,7 +11,8 @@ exports.add = function(req, res) {
     var message = req.body.message,
         loc_id = req.body.loc_id,
         cluster = req.body.cluster,
-        institution = req.body.institution;
+        institution = req.body.institution,
+        area = req.body.area;
 
     // Verify authorization
     if(!auth) {
@@ -37,7 +38,8 @@ exports.add = function(req, res) {
         "date": date,
         "message": message,
         "cluster": cluster,
-        "institution": institution
+        "institution": institution,
+        "area": area
     };
 
     logs_db.insert(entry, function(err, body) {
