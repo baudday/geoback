@@ -171,10 +171,18 @@ exports.login = function(req, res) {
                 }
 
                 // Remove the sensitive stuff
-                delete body.password_sha;
-                delete body.salt;
-
-                finalResponse = body;
+                finalResponse = {
+                    _id: body._id,
+                    _rev: body._rev,
+                    name: body.name,
+                    realname: body.realname,
+                    institution: body.institution,
+                    email: body.email,
+                    phone: body.phone,
+                    type: body.type,
+                    roles: body.roles,
+                    level: body.level
+                };
 
                 // Don't want anyone to be able to access this one.
                 res.cookie('AuthLevel', body.level, { maxAge: 315360000000, httpOnly: true });
