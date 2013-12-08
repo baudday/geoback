@@ -83,7 +83,7 @@ app.get('/api/status', function(req, res) {
 app.get('/api/foo', users.foo); // Test!
 
 app.options('/*', function(req, res) {
-    res.send('*');
+    res.send(true, 200);
 }); // OPTIONS hack
 
 console.log("Listening on port 3000....");
