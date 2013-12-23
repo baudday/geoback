@@ -17,7 +17,7 @@ AWS.config.loadFromPath('./AWScredentials.json');
 
 // Registration method
 exports.register = function(req, res) {
-    var username = req.body.username,
+    var username = req.body.username.toLowerCase(),
         password = req.body.password,
         first = req.body.first,
         last = req.body.last,
@@ -133,7 +133,7 @@ exports.login = function(req, res) {
         finalResponse;
 
         // User Credentials
-    var username = req.body.username,
+    var username = req.body.username.toLowerCase(),
         password = req.body.password;
 
     nano.request({
