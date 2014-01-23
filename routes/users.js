@@ -209,6 +209,7 @@ exports.login = function(req, res) {
 // Logout method
 exports.logout = function(req, res) {
     // The CouchDB cookie name is AuthSession
+    nano.config.cookie = null;
     res.clearCookie('AuthSession', {path: '/'});
     res.clearCookie('AuthLevel', {path: '/'});
     res.clearCookie('UserInfo', {path: '/'});
