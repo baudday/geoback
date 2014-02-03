@@ -29,6 +29,7 @@ var checkCouchDb = function(req, res, next) {
     var nano = require('nano')('http://127.0.0.1:5984');
     nano.db.list(function(err, body) {
         if(err) {
+            console.log('[%s]: %s', new Date(), 'COUCHDB IS DOWN!');
             var msg = "The database is down! Please contact a system administrator.";
             res.send(msg, 500);
         } else {
