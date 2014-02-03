@@ -25,12 +25,31 @@ var allowCrossDomain = function(req, res, next) {
      }
 }
 
+var checkCouchDb = function(req, res, next) {
+    var nano = require('nano')('http://127.0.0.1:5984');
+    nano.db.list(function(err, body) {
+        if(err) {
+            var msg = "The database is down! Please contact a system administrator.";
+            res.send(msg, 500);
+        } else {
+            next();
+        }
+    });
+}
+
 app.configure(function(){
     app.use(express.static(__dirname + '/public/'));
     app.use(express.bodyParser());
     app.use(allowCrossDomain);
     app.use(express.cookieParser('secret-string-is-secret'));
 });
+
+app.options('/*', function(req, res) {
+    res.send(true, 200);
+}); // OPTIONS hack
+
+// Make sure CouchDB is alive
+app.all('*', checkCouchDb);
 
 // User methods
 app.post('/api/users', users.register); // Register
@@ -81,10 +100,6 @@ app.get('/api/status', function(req, res) {
 
 // Just for testing
 app.get('/api/foo', users.foo); // Test!
-
-app.options('/*', function(req, res) {
-    res.send(true, 200);
-}); // OPTIONS hack
 
 console.log("Listening on port 3000....");
 app.listen(3000);
