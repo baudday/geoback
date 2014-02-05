@@ -5,7 +5,8 @@ var express = require('express'),
     log = require('./routes/log'),
     services = require('./routes/services'),
     areas = require('./routes/areas'),
-    contact = require('./routes/contact');
+    contact = require('./routes/contact'),
+    logger = require('./logger');
 
 var app = express();
 
@@ -29,7 +30,13 @@ var checkCouchDb = function(req, res, next) {
     var nano = require('nano')('http://127.0.0.1:5984');
     nano.db.list(function(err, body) {
         if(err) {
-            console.log('[%s]: %s', new Date(), 'COUCHDB IS DOWN!');
+            logger.error(
+                '%s %s COUCHDB IS DOWN!',
+                req.method,
+                req.url,
+                {client: req.get('User-Agent')}
+            );
+
             var msg = "The database is down! Please contact a system administrator.";
             res.send(msg, 500);
         } else {
@@ -49,8 +56,11 @@ app.options('/*', function(req, res) {
     res.send(true, 200);
 }); // OPTIONS hack
 
-// Make sure CouchDB is alive
-app.all('*', checkCouchDb);
+// Make sure CouchDB is alive & log request
+app.all('*', checkCouchDb, function(req, res, next) {
+    logger.info("%s %s", req.method, req.url, {client: req.get('User-Agent')});
+    next();
+});
 
 // User methods
 app.post('/api/users', users.register); // Register
