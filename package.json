@@ -12,7 +12,8 @@
   "dependencies" : {
     "aws-sdk" :  "*",
     "express" :  "3.1.0",
-    "nano"    :  "*"
+    "nano"    :  "*",
+    "winston" :  "*"
   },
   "license": "MIT",
   "engines": {
