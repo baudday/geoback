@@ -47,7 +47,6 @@ exports.add = function(req, res) {
     // Get the primary contact's info
     adminUsers_db.get(contact, function(err, body, headers) {
         if(err) {
-            console.log(contact);
             res.send(err.reason, err.status_code);
             return;
         }

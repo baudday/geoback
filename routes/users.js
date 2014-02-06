@@ -3,7 +3,8 @@ var nano = require('nano')('http://127.0.0.1:5984'),
     users_db = nano.use('_users'),
     AWS = require('aws-sdk'),
     crypto = require('crypto'),
-    fs = require('fs');
+    fs = require('fs'),
+    logger = require(__dirname + '/../logger');
 
 var adminCreds = require(__dirname + '/../env/couchcreds.json'),
     adminNano = require('nano')('http://127.0.0.1:5984'),
@@ -61,8 +62,7 @@ exports.register = function(req, res) {
     // Get the institution
     institutions_db.get(institution, function(err, body) {
         if(err) {
-            console.log("ERROR GETTING INSTITUTION");
-            console.log(err);
+            logger.error("Error getting Institution. Reason: %s", err.reason);
             res.send(err.reason, err.status_code);
             return;
         }
@@ -74,6 +74,7 @@ exports.register = function(req, res) {
         // Check if user's email domain matches institution domain or is on the list
         if(emailDomain[1] + "/" != urlDomain[l-2] + "." + urlDomain[l-1] &&
            body.approvedEmails.indexOf(email) === -1) {
+            logger.warn('%s attempted to register under %s', email, body.name);
             res.send("Not approved to register under " + body.name, 404);
             return;
         }
@@ -84,8 +85,7 @@ exports.register = function(req, res) {
             body: user
         }, function(err, body) {
             if(err) {
-                console.log("ERROR INSERTING USER");
-                console.log(err);
+                logger.error("Error inserting User. Reason: %s", err.reason);
                 res.send(err.status_code + " " + err.reason, err.status_code);
                 return;
             }
@@ -115,8 +115,7 @@ exports.register = function(req, res) {
                 },
             }, function(err, data) {
                 if(err) {
-                    console.log("ERROR SENDING EMAIL");
-                    console.log(err);
+                    logger.error("Error sending email");
                     res.send(500);
                     return;
                 }
