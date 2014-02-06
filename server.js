@@ -12,7 +12,8 @@ var app = express();
 
 var allowCrossDomain = function(req, res, next) {
      var allowedHost = [
-         'http://localhost'
+         'http://georeliefs.com',
+         'http://test.georeliefs.com'
      ];
 
      if(allowedHost.indexOf(req.headers.origin) !== -1) {
@@ -22,6 +23,7 @@ var allowCrossDomain = function(req, res, next) {
          res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
          next();
      } else {
+        logger.warn('Request from Invalid Origin!');
          res.send({responseText: "Invalid origin"}, 400);
      }
 }
