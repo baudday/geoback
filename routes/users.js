@@ -5,7 +5,7 @@ var nano = require('nano')('http://127.0.0.1:5984'),
     crypto = require('crypto'),
     fs = require('fs');
 
-var adminCreds = require('../couchcreds.json'),
+var adminCreds = require(__dirname + '/../env/couchcreds.json'),
     adminNano = require('nano')('http://127.0.0.1:5984'),
     adminUsers_db = adminNano.use('_users');
 
@@ -13,7 +13,7 @@ var adminCreds = require('../couchcreds.json'),
 adminNano.config.url = 'http://' + adminCreds.user + ':' + adminCreds.pass + '@127.0.0.1:5984';
 
 // Configure AWS
-AWS.config.loadFromPath('./AWScredentials.json');
+AWS.config.loadFromPath(__dirname + '/../env/AWScredentials.json');
 
 // Registration method
 exports.register = function(req, res) {
