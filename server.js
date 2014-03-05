@@ -5,6 +5,7 @@ var express = require('express'),
     log = require('./routes/log'),
     services = require('./routes/services'),
     areas = require('./routes/areas'),
+    tiles = require('./routes/tiles'),
     contact = require('./routes/contact'),
     logger = require('./logger');
 
@@ -103,6 +104,8 @@ app.post('/api/areas', areas.add); // Add an area
 app.get('/api/areas/:area', areas.getArea) // Get a single area
 app.get('/api/areas', areas.getAll) // Get all areas
 app.delete('/api/areas', areas.delete) // Delete an area
+
+app.get('/api/tiles/:area/:zoom', tiles.getByArea); // Get tiles by area
 
 // Contact methods
 app.post('/api/contact', contact.send);
