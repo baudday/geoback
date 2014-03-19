@@ -81,24 +81,31 @@ exports.add = function(req, res) {
                 return;
             }
 
+            /**
+              * Since we have the script, this no longer needs to happen.
+              * Keeping the logic here, just in case!
+              *
+              **/
+
             // Increment the service count
-            locations_db.get(loc_id, function(err, body) {
-                if(err) {
-                    res.send(err.reason, err.status_code);
-                    return;
-                }
+            // locations_db.get(loc_id, function(err, body) {
+            //     if(err) {
+            //         res.send(err.reason, err.status_code);
+            //         return;
+            //     }
 
-                // Increment the service count
-                body.geoJSON.properties.serviceCount += 1;
+            //     // Increment the service count
+            //     body.geoJSON.properties.serviceCount += 1;
 
-                // Save it back
-                locations_db.insert(body, function(err, body) {
-                    if(err) {
-                        res.send(err.reason, err.status_code);
-                        return;
-                    }
-                });
-            });
+            //     // Save it back
+            //     locations_db.insert(body, function(err, body) {
+            //         if(err) {
+            //             res.send(err.reason, err.status_code);
+            //             return;
+            //         }
+            //     });
+            // });
+
             // Everything worked! Send the final response
             res.send(body, 200);
         });
