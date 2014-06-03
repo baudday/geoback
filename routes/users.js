@@ -3,9 +3,10 @@ var nano = require('nano')('http://127.0.0.1:5984'),
     users_db = nano.use('_users'),
     AWS = require('aws-sdk'),
     crypto = require('crypto'),
-    fs = require('fs');
+    fs = require('fs'),
+    logger = require(__dirname + '/../logger');
 
-var adminCreds = require('../couchcreds.json'),
+var adminCreds = require(__dirname + '/../env/couchcreds.json'),
     adminNano = require('nano')('http://127.0.0.1:5984'),
     adminUsers_db = adminNano.use('_users');
 
@@ -13,11 +14,11 @@ var adminCreds = require('../couchcreds.json'),
 adminNano.config.url = 'http://' + adminCreds.user + ':' + adminCreds.pass + '@127.0.0.1:5984';
 
 // Configure AWS
-AWS.config.loadFromPath('./AWScredentials.json');
+AWS.config.loadFromPath(__dirname + '/../env/AWScredentials.json');
 
 // Registration method
 exports.register = function(req, res) {
-    var username = req.body.username,
+    var username = req.body.username.toLowerCase(),
         password = req.body.password,
         first = req.body.first,
         last = req.body.last,
@@ -61,8 +62,7 @@ exports.register = function(req, res) {
     // Get the institution
     institutions_db.get(institution, function(err, body) {
         if(err) {
-            console.log("ERROR GETTING INSTITUTION");
-            console.log(err);
+            logger.error("Error getting Institution. Reason: %s", err.reason);
             res.send(err.reason, err.status_code);
             return;
         }
@@ -74,6 +74,7 @@ exports.register = function(req, res) {
         // Check if user's email domain matches institution domain or is on the list
         if(emailDomain[1] + "/" != urlDomain[l-2] + "." + urlDomain[l-1] &&
            body.approvedEmails.indexOf(email) === -1) {
+            logger.warn('%s attempted to register under %s', email, body.name);
             res.send("Not approved to register under " + body.name, 404);
             return;
         }
@@ -84,8 +85,7 @@ exports.register = function(req, res) {
             body: user
         }, function(err, body) {
             if(err) {
-                console.log("ERROR INSERTING USER");
-                console.log(err);
+                logger.error("Error inserting User. Reason: %s", err.reason);
                 res.send(err.status_code + " " + err.reason, err.status_code);
                 return;
             }
@@ -115,8 +115,7 @@ exports.register = function(req, res) {
                 },
             }, function(err, data) {
                 if(err) {
-                    console.log("ERROR SENDING EMAIL");
-                    console.log(err);
+                    logger.error("Error sending email");
                     res.send(500);
                     return;
                 }
@@ -133,7 +132,7 @@ exports.login = function(req, res) {
         finalResponse;
 
         // User Credentials
-    var username = req.body.username,
+    var username = req.body.username.toLowerCase(),
         password = req.body.password;
 
     nano.request({
@@ -171,10 +170,18 @@ exports.login = function(req, res) {
                 }
 
                 // Remove the sensitive stuff
-                delete body.password_sha;
-                delete body.salt;
-
-                finalResponse = body;
+                finalResponse = {
+                    _id: body._id,
+                    _rev: body._rev,
+                    name: body.name,
+                    realname: body.realname,
+                    institution: body.institution,
+                    email: body.email,
+                    phone: body.phone,
+                    type: body.type,
+                    roles: body.roles,
+                    level: body.level
+                };
 
                 // Don't want anyone to be able to access this one.
                 res.cookie('AuthLevel', body.level, { maxAge: 315360000000, httpOnly: true });
@@ -201,6 +208,7 @@ exports.login = function(req, res) {
 // Logout method
 exports.logout = function(req, res) {
     // The CouchDB cookie name is AuthSession
+    nano.config.cookie = null;
     res.clearCookie('AuthSession', {path: '/'});
     res.clearCookie('AuthLevel', {path: '/'});
     res.clearCookie('UserInfo', {path: '/'});

@@ -1,5 +1,6 @@
 /node_modules
-/couchcreds.json
-/AWScredentials.json
+/env
 /npm-debug.log
 /curl.exe
+/tmp
+

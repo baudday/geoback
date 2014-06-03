@@ -5,7 +5,7 @@ var nano = require('nano')('http://127.0.0.1:5984'),
     locations_db = nano.use('locations'),
     AWS = require('aws-sdk');
 
-var adminCreds = require('../couchcreds.json'),
+var adminCreds = require(__dirname + '/../env/couchcreds.json'),
     adminNano = require('nano')('http://127.0.0.1:5984'),
     adminUsers_db = adminNano.use('_users');
 
@@ -13,7 +13,7 @@ var adminCreds = require('../couchcreds.json'),
 adminNano.config.url = 'http://' + adminCreds.user + ':' + adminCreds.pass + '@127.0.0.1:5984';
 
 // Configure AWS
-AWS.config.loadFromPath('./AWScredentials.json');
+AWS.config.loadFromPath(__dirname + '/../env/AWScredentials.json');
 
 // Add service method
 // TEST:
@@ -29,6 +29,7 @@ exports.add = function(req, res) {
     var cluster = req.body.cluster,
         institution_name = req.body.institution_name,
         institution_id = req.body.institution_id,
+        area = req.body.area,
         stage = req.body.stage,
         description = req.body.description,
         contact = req.body.contact,
@@ -46,7 +47,6 @@ exports.add = function(req, res) {
     // Get the primary contact's info
     adminUsers_db.get(contact, function(err, body, headers) {
         if(err) {
-            console.log(contact);
             res.send(err.reason, err.status_code);
             return;
         }
@@ -64,6 +64,7 @@ exports.add = function(req, res) {
             institution_id: institution_id,
             institution_name: institution_name,
             loc_id: loc_id,
+            area: area,
             stage: stage,
             description: description,
             contact: primary_contact,
@@ -80,24 +81,31 @@ exports.add = function(req, res) {
                 return;
             }
 
+            /**
+              * Since we have the script, this no longer needs to happen.
+              * Keeping the logic here, just in case!
+              *
+              **/
+
             // Increment the service count
-            locations_db.get(loc_id, function(err, body) {
-                if(err) {
-                    res.send(err.reason, err.status_code);
-                    return;
-                }
+            // locations_db.get(loc_id, function(err, body) {
+            //     if(err) {
+            //         res.send(err.reason, err.status_code);
+            //         return;
+            //     }
 
-                // Increment the service count
-                body.geoJSON.properties.serviceCount += 1;
+            //     // Increment the service count
+            //     body.geoJSON.properties.serviceCount += 1;
 
-                // Save it back
-                locations_db.insert(body, function(err, body) {
-                    if(err) {
-                        res.send(err.reason, err.status_code);
-                        return;
-                    }
-                });
-            });
+            //     // Save it back
+            //     locations_db.insert(body, function(err, body) {
+            //         if(err) {
+            //             res.send(err.reason, err.status_code);
+            //             return;
+            //         }
+            //     });
+            // });
+
             // Everything worked! Send the final response
             res.send(body, 200);
         });

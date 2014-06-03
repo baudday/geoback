@@ -1,6 +1,6 @@
 var AWS = require('aws-sdk');
 // Configure AWS
-AWS.config.loadFromPath('./AWScredentials.json');
+AWS.config.loadFromPath(__dirname + '/../env/AWScredentials.json');
 
 exports.send = function(req, res) {
     var name = req.body.name,
